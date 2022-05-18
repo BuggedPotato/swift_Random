@@ -1,0 +1,15 @@
+/*
+1. Napisz funkcję, która:
+	- przyjmuje tablicę z typami Any
+	- zwraca tablicę tylko z elementami typu Int wejściowej tablicy
+	
+	Reasumując wycina elemety inne niż typu Int.
+*/
+
+func getOnlyIntElements( arr : [Any] ) -> [Int]
+{
+    let result : [Int] = arr.filter{ $0 is Int } as! [Int];
+    return result;
+}
+
+print( getOnlyIntElements( arr: [1, 3.5, "opachkii", 4, 2311111, "b"] ) );

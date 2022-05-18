@@ -1,0 +1,83 @@
+/*
+3. Napisz funkcję mnożącą dwie macierze, która:
+	- przyjmuje dwie tablice
+	- informuje jeśli tablice mają złe wymiary lub typy
+	- zwraca tablicę z wynikiem
+*/
+
+
+func matrixMultipy( A : [[Any]], B : [[Any]] ) -> [[Double]]?
+{
+    let arrayA : [[Double]]? = A as? [[Double]];
+    let arrayB : [[Double]]? = B as? [[Double]];
+    let sizeA : ( Int, Int );
+    let sizeB : ( Int, Int );
+
+    if arrayA == nil || arrayB == nil
+    {
+        print("[ERROR] Invalid array data type! Required type => Double ( e.g. 1 -> 1.0 )");
+        return nil;
+    }
+    else if !checkMatrixSizeCompatibility( A: arrayA!, B: arrayB! )
+    {
+        print("[ERROR] Invalid array size!");
+        return nil;
+    }
+
+    sizeA = getMatrixSize( A: A )!;
+    sizeB = getMatrixSize( A: B )!;
+
+
+    var arrayC : [[Double]] = [];
+
+    for i in 0..<sizeA.0
+    {
+        let arr : [Double] = [];
+        arrayC.append( arr );
+        for j in 0..<sizeB.1
+        {
+            arrayC[i].append( 0.0 );
+            for k in 0..<sizeB.0
+            {
+                arrayC[i][j] += arrayA![i][k] * arrayB![k][j];
+            }
+        }
+    }
+    
+    return arrayC;
+}
+
+func checkMatrixSizeCompatibility( A : [[Any]], B : [[Any]] ) -> Bool
+{
+    let sizeA : ( Int, Int )? = getMatrixSize( A: A );
+    let sizeB : ( Int, Int )? = getMatrixSize( A: B );
+
+    if sizeA == nil || sizeB == nil
+    {
+        return false;
+    }
+    else if sizeA!.1 != sizeB!.0
+    {
+        return false;
+    }
+
+    return true;
+}
+
+func getMatrixSize( A: [[Any]] ) -> ( Int, Int )?
+{
+    var sizeA : ( Int, Int );
+
+    sizeA.0 = A.count; // rows
+    sizeA.1 = A[0].count; // columns
+    for y in A
+    {
+        if y.count != sizeA.1
+        {
+            return nil;
+        }
+    }
+    return sizeA;
+}
+
+print( matrixMultipy( A: [[2.0,4.0], [1.0,4.0], [5.0,2.0]], B: [[6.0,7.0], [9.0,14.0]] ) ?? "" );

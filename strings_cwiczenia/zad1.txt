@@ -1,0 +1,43 @@
+// zadanie 1.
+// pobranie imienia i sprawdzenie ostatniej litery
+
+func getNameGender( originalName : String ) -> String
+{
+    var name = originalName;
+    // bo trimming nie dziala??? kochany swift
+    while( true )
+    {
+        if( name.hasPrefix( " " ) )
+        {
+            name.removeFirst();
+        }
+        else if( name.hasSuffix( " " ) )
+        {
+            name.removeLast();
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+    
+    if( name.count < 1 )
+    {
+        return "Niepoprawne imię!";
+    }
+    
+    var gender : String = name.lowercased().last == "a" ? "kobiecym" : "męskim";
+    
+    let tmp : String = name.lowercased();
+    if( tmp == "kuba" || tmp == "barnaba" )
+    {
+        gender = "męskim";
+    }
+    
+    return "Twoje imię to \(name) i jest imieniem \(gender).";
+}
+
+print("Podaj imię:");
+let name : String = readLine()!;
+print( getNameGender(originalName: name) );

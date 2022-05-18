@@ -1,0 +1,148 @@
+// zadanie 1.
+// pobranie imienia i sprawdzenie ostatniej litery
+
+func getNameGender( originalName : String ) -> String
+{
+    var name = originalName;
+    // bo trimming nie dziala??? kochany swift
+    while( true )
+    {
+        if( name.hasPrefix( " " ) )
+        {
+            name.removeFirst();
+        }
+        else if( name.hasSuffix( " " ) )
+        {
+            name.removeLast();
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+    
+    if( name.count < 1 )
+    {
+        return "Niepoprawne imię!";
+    }
+    
+    var gender : String = name.lowercased().last == "a" ? "kobiecym" : "męskim";
+    
+    let tmp : String = name.lowercased();
+    if( tmp == "kuba" || tmp == "barnaba" )
+    {
+        gender = "męskim";
+    }
+    
+    return "Twoje imię to \(name) i jest imieniem \(gender).";
+}
+
+
+
+
+
+// zadanie 2.
+// pobieranie informacji z numeru PESEL
+
+func analisePESEL( pesel : String ) -> String
+{
+    if( pesel.contains( " " ) || pesel.count != 11 || !isCorrectPESEL( pesel: pesel ) )
+    {
+        return "Niepoprawny numer PESEL";
+    }
+    
+    
+    let peselArr : [Character] = Array( pesel );
+    
+    let genderNumber : String = String( peselArr[10] );
+    let gender : Character = Int(genderNumber)! % 2 == 0 ? "K" : "M";
+    
+    var birthDateArr : [ String : String ] = [ "year": "", "month": "", "day": "" ];
+    birthDateArr[ "year" ] = "\(peselArr[0])\(peselArr[1])";
+    birthDateArr[ "month" ] = "\(peselArr[2])\(peselArr[3])";
+    birthDateArr[ "day" ] = "\(peselArr[4])\(peselArr[5])";
+    
+    
+    // print( birthDateArr )
+    let centuryChar : Int = Int( String( peselArr[2] ) )!;
+    var century : String = "20";
+    var month : Int = Int(birthDateArr[ "month" ]!)!;
+    
+    switch centuryChar
+    {
+        case 0, 1:
+            century = "19";
+        case 2, 3:
+            century = "20";
+            month = month - 20;
+        case 4, 5:
+            century = "21";
+            month = month - 40;
+        case 6, 7:
+            century = "22";
+            month = month - 60;
+        case 8, 9:
+            century = "18";
+            month = month - 80;
+        default:
+            return "Niepoprawny numer PESEL";
+    }
+    if( month > 12 || Int(birthDateArr[ "day" ]!)! > 31 )
+    {
+        return "Niepoprawny numer PESEL";
+    }
+    
+    birthDateArr[ "year" ] = century + birthDateArr[ "year" ]!;
+    birthDateArr[ "month" ] = month < 10 ? "0\(month)" : String( month );
+    let birthDate : String = "\(birthDateArr[ "day" ]!).\(birthDateArr[ "month" ]!).\(birthDateArr[ "year" ]! )";
+    
+    return( "Dane z numeru PESEL:\n\(gender), \(birthDate)" );
+}
+
+func isCorrectPESEL( pesel : String ) -> Bool
+{
+    let peselArr : [Character] = Array( pesel );
+    let weight : [Int] = [ 1, 3, 7, 9 ];
+    
+    var i : Int = 0;
+    var s : Int = 0;
+    for char in 0..<(peselArr.count-1)
+    {
+        if( i >= weight.count )
+        {
+            i = 0;
+        }
+        s += Int( String( peselArr[ char ] ) )! * weight[i];
+        i += 1;
+    }
+    
+    let m : Int = s % 10;
+    let digit : Character = m == 0 ? "0" : Character( String(10 - m) );
+
+    // ?????????????????????? czemu endIndex to nie ostatni index tylko dlugosc ??????
+    return peselArr[ peselArr.endIndex-1 ] == digit;
+}
+
+
+var input : String = "";
+while input != "k"
+{
+    print( "Wybierz zadanie:\n\t1. Imię\n\t2. PESEL\n\tK. Wyjście" );
+    input = readLine()!.lowercased();
+    switch input
+    {
+        case "1":
+            print( "Podaj imię:" );
+            let str = readLine()!;
+            print( getNameGender( originalName: str ) );
+        case "2":
+            print( "Podaj PESEL:" );
+            let str = readLine()!;
+            print( analisePESEL( pesel : str ) );
+        case "k":
+            break;
+        default:
+            print( "Wybierz prwaidłową opcję." );
+    }
+}
